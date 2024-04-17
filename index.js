@@ -1,5 +1,13 @@
 import express from 'express'
+import { authMiddleware } from './middlewares/auth.middleware.js'
+
 const app = express()
+const __dirname = import.meta.dirname;
+
+console.log(__dirname)
+
+// middlwares
+app.use(express.static(__dirname + '/public'))
 
 // enrutamiento
 app.get('/', (req, res) => {
@@ -38,6 +46,11 @@ app.get('/products/:id', (req, res) => {
     }
 
     return res.json(product)
+})
+
+app.get('/user', authMiddleware, (req, res) => {
+    const user = { id: 1, name: 'user1', password: '123123' }
+    res.json(user)
 })
 
 app.get('/latam', (req, res) => {
