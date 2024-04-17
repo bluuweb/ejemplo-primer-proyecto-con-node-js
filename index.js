@@ -1,5 +1,4 @@
 import express from "express";
-import { userMiddleware } from "./middlewares/user.middleware.js";
 
 const app = express();
 const __dirname = import.meta.dirname;
@@ -9,23 +8,8 @@ export const usuarios = ["juan"];
 // middlwares
 app.use(express.static(__dirname + "/public"));
 
-app.get("/abracadabra/juego/:usuario", userMiddleware, (req, res) => {
+app.get("/abracadabra/juego/:usuario", (req, res) => {
   res.sendFile(__dirname + "/public/juego.html");
-});
-
-app.get("/usuarios", (req, res) => {
-  res.json({ usuarios });
-});
-
-app.get("/abracadabra/conejo/:n", (req, res) => {
-  const aleatorio = 1;
-  const { n } = req.params;
-
-  if (+n === aleatorio) {
-    return res.redirect("/assets/img/conejito.jpg");
-  }
-
-  return res.redirect("/assets/img/voldemort.jpg");
 });
 
 // middleware
