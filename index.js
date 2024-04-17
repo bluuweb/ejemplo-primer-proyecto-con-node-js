@@ -1,81 +1,40 @@
-import express from 'express'
-import { authMiddleware } from './middlewares/auth.middleware.js'
+import express from "express";
+import { userMiddleware } from "./middlewares/user.middleware.js";
 
-const app = express()
+const app = express();
 const __dirname = import.meta.dirname;
 
-console.log(__dirname)
+export const usuarios = ["juan"];
 
 // middlwares
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + "/public"));
 
-// enrutamiento
-app.get('/', (req, res) => {
-    res.status(200).json({ method: 'GET' })
-})
+app.get("/abracadabra/juego/:usuario", userMiddleware, (req, res) => {
+  res.sendFile(__dirname + "/public/juego.html");
+});
 
-const products = [
-    {
-        id: 1,
-        name: 'product 1',
-    },
-    {
-        id: 2,
-        name: 'product 2',
-    },
-    {
-        id: 3,
-        name: 'product 3',
-    }
-]
+app.get("/usuarios", (req, res) => {
+  res.json({ usuarios });
+});
 
-app.get('/products', (req, res) => {
-    return res.json(products)
-})
+app.get("/abracadabra/conejo/:n", (req, res) => {
+  const aleatorio = 1;
+  const { n } = req.params;
 
-app.get('/products/:id', (req, res) => {
+  if (+n === aleatorio) {
+    return res.redirect("/assets/img/conejito.jpg");
+  }
 
-    // destructuring de objetos
-    // const { id } = req.params
-    const id = req.params.id
-
-    const product = products.find(item => item.id === +id)
-
-    if (!product) {
-        return res.status(404).json({ msg: 'no se encontró el producto' })
-    }
-
-    return res.json(product)
-})
-
-app.get('/user', authMiddleware, (req, res) => {
-    const user = { id: 1, name: 'user1', password: '123123' }
-    res.json(user)
-})
-
-app.get('/latam', (req, res) => {
-    res.redirect('https://desafiolatam.com/react/')
-})
-
-app.post('/', (req, res) => {
-    res.status(201).json({ method: 'POST' })
-})
-
-app.put('/', (req, res) => {
-    res.json({ method: 'PUT' })
-})
-
-app.delete('/', (req, res) => {
-    res.json({ method: 'DELETE' })
-})
+  return res.redirect("/assets/img/voldemort.jpg");
+});
 
 // middleware
-app.use('*', (req, res) => {
-    res.status(404).json({ error: 404 })
-})
+app.use("*", (req, res) => {
+  res.status(404).json({ error: 404 });
+});
 
 // levantar el servidor
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
-    console.log(`Example app listening http://localhost:${PORT}`)
-})
+  console.log(`Example app listening http://localhost:${PORT}`);
+});
